@@ -189,6 +189,9 @@ cd osm2pgsql/
 ./autogen.sh
 sed -i 's/version = BZ2_bzlibVersion();//' configure
 sed -i 's/version = zlibVersion();//' configure
+#edit Makefile to have -lz after input.o at line 128:
+# am_osm2pgsql_OBJECTS = build_geometry.$(OBJEXT) input.$(OBJEXT) \
+# >>> am_osm2pgsql_OBJECTS = build_geometry.$(OBJEXT) input.$(OBJEXT) -lz \
 ./configure
 make
 sudo make install
@@ -249,6 +252,7 @@ rm -rf /mnt/data/tigerdata
 createdb -U postgres names
 cd /mnt/data
 curl -O "http://www.ssa.gov/oact/babynames/names.zip"
+unzip names.zip
 dos2unix yob*.txt
 ~/sources/dstk/dataconversion/analyzebabynames.rb . > babynames.csv
 psql -U postgres -d names -f ~/sources/dstk/sql/loadnames.sql
@@ -285,7 +289,7 @@ cd twofishes
 mkdir bin
 curl "http://www.twofishes.net/binaries/latest.jar" > bin/twofishes.jar
 mkdir data
-curl "http://www.twofishes.net/indexes/revgeo/latest.zip" > data/twofishesdata.zip
+curl "http://www.twofishes.net/indexes/revgeo/2014-03-21.zip.zip" > data/twofishesdata.zip
 cd data
 unzip twofishesdata.zip
 sudo cp ~/sources/dstk/twofishes.conf /etc/init/twofishes.conf
